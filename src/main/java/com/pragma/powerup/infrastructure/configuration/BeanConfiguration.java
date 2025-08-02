@@ -1,13 +1,17 @@
 package com.pragma.powerup.infrastructure.configuration;
 
+import com.pragma.powerup.application.mapper.IUserResponseMapper;
 import com.pragma.powerup.domain.api.IObjectServicePort;
 import com.pragma.powerup.domain.api.IRestaurantServicePort;
+import com.pragma.powerup.domain.spi.IClientUserPort;
 import com.pragma.powerup.domain.spi.IObjectPersistencePort;
 import com.pragma.powerup.domain.spi.IRestaurantPersistencePort;
 import com.pragma.powerup.domain.usecase.ObjectUseCase;
 import com.pragma.powerup.domain.usecase.RestaurantUseCase;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.ObjectJpaAdapter;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.RestaurantJpaAdapter;
+import com.pragma.powerup.infrastructure.out.jpa.client.IFeignClient;
+import com.pragma.powerup.infrastructure.out.jpa.client.implementacion.UserClient;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IObjectEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IObjectRepository;
@@ -23,6 +27,8 @@ public class BeanConfiguration {
     private final IObjectEntityMapper objectEntityMapper;
     private final IRestaurantRepository restaurantRepository;
     private final IRestaurantEntityMapper restaurantEntityMapper;
+    private final IUserResponseMapper userResponseMapper;
+    private final IFeignClient feignClient;
 
     @Bean
     public IObjectPersistencePort objectPersistencePort() {
@@ -40,8 +46,13 @@ public class BeanConfiguration {
     }
 
     @Bean
-    IRestaurantServicePort restaurantServicePort(){
-        return new RestaurantUseCase(restaurantPersistencePort());
+    public IClientUserPort clientUserPort(){
+        return new UserClient(feignClient, userResponseMapper);
+    }
+
+    @Bean
+    public IRestaurantServicePort restaurantServicePort(){
+        return new RestaurantUseCase(restaurantPersistencePort(), clientUserPort() );
     }
 
 }

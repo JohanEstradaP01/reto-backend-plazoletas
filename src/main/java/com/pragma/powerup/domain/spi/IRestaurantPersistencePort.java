@@ -6,4 +6,6 @@ public interface IRestaurantPersistencePort {
 
     public void saveRestaurant(Restaurant restaurant);
 
+    public Restaurant findRestaurantByNit(String nit);
+
 }

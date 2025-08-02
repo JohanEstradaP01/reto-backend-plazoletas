@@ -4,6 +4,7 @@ import com.pragma.powerup.application.dto.request.RestaurantRequestDto;
 import com.pragma.powerup.application.handler.IRestaurantHandler;
 import com.pragma.powerup.application.mapper.IRestaurantRequestMapper;
 import com.pragma.powerup.domain.api.IRestaurantServicePort;
+import com.pragma.powerup.domain.exception.RestaurantAlreadyExist;
 import com.pragma.powerup.domain.model.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class RestaurantHandler implements IRestaurantHandler {
     private final IRestaurantServicePort restaurantServicePort;
 
     @Override
-    public void createRestaurant(RestaurantRequestDto restaurantRequestDto) {
+    public void createRestaurant(RestaurantRequestDto restaurantRequestDto) throws RestaurantAlreadyExist {
         Restaurant restaurant = restaurantRequestMapper.toRestaurant(restaurantRequestDto);
         restaurantServicePort.createRestaurant(restaurant);
     }
