@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.exceptionhandler;
 
+import com.pragma.powerup.domain.exception.RestaurantAlreadyExist;
 import com.pragma.powerup.infrastructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +21,12 @@ public class ControllerAdvisor {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(MESSAGE, ExceptionResponse.NO_DATA_FOUND.getMessage()));
     }
+
+    @ExceptionHandler(RestaurantAlreadyExist.class)
+    public ResponseEntity<String> handlerRestaurantAlreadyExist(){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("El restaurante registrado ya existe");
+    }
+
     
 }
