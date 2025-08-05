@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
+import com.pragma.powerup.application.dto.request.DishAvailabilityDto;
 import com.pragma.powerup.application.dto.request.DishRequestDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,11 @@ public class DishRestController {
     @PutMapping
     public void updateDish(@RequestBody DishRequestDto dishRequestDto){
         dishHandler.updateDish(dishRequestDto);
+    }
+
+    @PutMapping("/availability")
+    public void changeAvailability(@RequestBody DishAvailabilityDto dishAvailabilityDto){
+        dishHandler.changeAvailability(dishAvailabilityDto);
     }
 
 }

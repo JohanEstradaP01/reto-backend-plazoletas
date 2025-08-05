@@ -35,4 +35,11 @@ public class DishUseCase implements IDishUseCase {
         dishPersistencePort.saveDish(dishToUpdate);
     }
 
+    @Override
+    public void changeAvailability(Long id, boolean availability) {
+        Dish dish = dishPersistencePort.getDish(id);
+        dish.setActive(availability);
+        dishPersistencePort.saveDish(dish);
+    }
+
 }

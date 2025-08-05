@@ -8,4 +8,6 @@ public interface IDishUseCase {
 
     public void updateDish(Dish dish);
 
+    public void changeAvailability(Long id, boolean availability);
+
 }

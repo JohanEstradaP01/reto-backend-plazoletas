@@ -1,5 +1,6 @@
 package com.pragma.powerup.application.handler.impl;
 
+import com.pragma.powerup.application.dto.request.DishAvailabilityDto;
 import com.pragma.powerup.application.dto.request.DishRequestDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import com.pragma.powerup.application.mapper.IDishRequestMapper;
@@ -33,6 +34,14 @@ public class DIshHandler implements IDishHandler {
     @Override
     public void updateDish(DishRequestDto dishRequestDto) {
         dishUseCase.updateDish(dishRequestMapper.toDish(dishRequestDto));
+    }
+
+    @Override
+    public void changeAvailability(DishAvailabilityDto dishAvailabilityDto) {
+        long id = dishAvailabilityDto.getId();
+        boolean availability = dishAvailabilityDto.isAvailability();
+
+        dishUseCase.changeAvailability(id, availability);
     }
 
 }
