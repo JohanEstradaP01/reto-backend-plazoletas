@@ -8,6 +8,9 @@ import com.pragma.powerup.domain.model.User;
 import com.pragma.powerup.domain.spi.IClientUserPort;
 import com.pragma.powerup.domain.spi.IRestaurantPersistencePort;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RestaurantUseCase implements IRestaurantServicePort {
 
     private final IRestaurantPersistencePort restaurantPersistencePort;
@@ -31,6 +34,11 @@ public class RestaurantUseCase implements IRestaurantServicePort {
             throw new RestaurantAlreadyExist();
         }
         restaurantPersistencePort.saveRestaurant(restaurant);
+    }
+
+    @Override
+    public List<Restaurant> getAllRestaurants() {
+        return new ArrayList<>(restaurantPersistencePort.getAllRestaurant());
     }
 
 

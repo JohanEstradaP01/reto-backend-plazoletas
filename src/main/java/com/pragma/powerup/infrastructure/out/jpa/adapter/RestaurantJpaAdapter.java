@@ -8,6 +8,8 @@ import com.pragma.powerup.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.SimpleTimeZone;
 
@@ -27,6 +29,16 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
     public Restaurant findRestaurantByNit(String nit) {
         Optional<RestaurantEntity> entity = restaurantRepository.findByNit(nit);
         return entity.map(restaurantEntityMapper::toRestaurant).orElse(null);
+    }
+
+    @Override
+    public List<Restaurant> getAllRestaurant() {
+        List<RestaurantEntity> entities = restaurantRepository.findAll();
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        for (RestaurantEntity restaurant : entities){
+            restaurants.add(restaurantEntityMapper.toRestaurant(restaurant));
+        }
+        return restaurants;
     }
 
     @Override
