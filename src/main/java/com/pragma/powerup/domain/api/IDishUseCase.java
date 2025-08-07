@@ -4,7 +4,7 @@ import com.pragma.powerup.domain.model.Dish;
 
 public interface IDishUseCase {
 
-    public void createDish(Dish dish);
+    public void createDish(Dish dish, String identification);
 
     public void updateDish(Dish dish);
 

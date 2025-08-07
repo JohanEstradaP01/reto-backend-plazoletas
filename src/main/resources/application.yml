@@ -7,6 +7,12 @@ spring:
     username: root
     password: 1234
 
+application:
+  security:
+    jwt:
+      secret-key: p6b6aWZ9rpGkq1eb7ZQ+1qZW16ZHmBZRGdwO3rfF7Z0=
+
+
   jpa:
     hibernate:
       ddl-auto: update

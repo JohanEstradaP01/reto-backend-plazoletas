@@ -2,6 +2,8 @@ package com.pragma.powerup.domain.usecase;
 
 import com.pragma.powerup.domain.api.IRestaurantServicePort;
 import com.pragma.powerup.domain.exception.RestaurantAlreadyExist;
+import com.pragma.powerup.domain.exception.UserNotIsOwnerException;
+import com.pragma.powerup.domain.exception.UserNotIsOwnerException;
 import com.pragma.powerup.domain.model.Restaurant;
 import com.pragma.powerup.domain.model.Role;
 import com.pragma.powerup.domain.model.User;
@@ -28,7 +30,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         User owner = clientUserPort.getUser(ownerId);
 
         if (owner.getRole() != Role.OWNER) {
-            throw new RuntimeException(); //cambiar error
+            throw new UserNotIsOwnerException();
         }
         if (restaurantPersistencePort.findRestaurantByNit(restaurant.getNit()) != null) {
             throw new RestaurantAlreadyExist();

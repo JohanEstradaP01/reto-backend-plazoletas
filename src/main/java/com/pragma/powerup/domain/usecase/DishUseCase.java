@@ -16,13 +16,19 @@ public class DishUseCase implements IDishUseCase {
     }
 
     @Override
-    public void createDish(Dish dish) {
-        if(dish.getPrice() < 0){
+    public void createDish(Dish dish, String identification) {
+        if(dish.getPrice() <= 0){
             throw new RuntimeException();
         }
+
         if(!restaurantValidationPort.existRestaurantById(dish.getRestaurantId())){
             throw new RuntimeException();
         }
+        System.out.println(identification+ " "+ dish.getRestaurantId());
+        if (!restaurantValidationPort.isOwner(identification, dish.getRestaurantId())) {
+            throw new RuntimeException();
+        }
+
         dish.setActive(true);
         dishPersistencePort.saveDish(dish);
     }

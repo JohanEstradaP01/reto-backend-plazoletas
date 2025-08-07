@@ -1,10 +1,10 @@
 package com.pragma.powerup.application.dto.response;
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter

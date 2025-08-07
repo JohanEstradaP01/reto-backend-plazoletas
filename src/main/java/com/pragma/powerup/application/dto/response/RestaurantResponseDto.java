@@ -2,9 +2,6 @@ package com.pragma.powerup.application.dto.response;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
 @Data
 
 public class RestaurantResponseDto {

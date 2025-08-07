@@ -8,10 +8,7 @@ import com.pragma.powerup.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.SimpleTimeZone;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestaurantValidationPort {
@@ -46,4 +43,12 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
         Optional<RestaurantEntity> entity = restaurantRepository.findById(id);
         return entity.isPresent();
     }
+
+    @Override
+    public boolean isOwner(String identification, Long restaurantId) {
+        Optional<RestaurantEntity> restaurant = restaurantRepository.findById(restaurantId);
+        System.out.println(identification + " " + restaurant.get().getOwnerId());
+        return restaurant.filter(restaurantEntity -> Objects.equals(String.valueOf(restaurantEntity.getOwnerId()), identification)).isPresent();
+    }
+
 }

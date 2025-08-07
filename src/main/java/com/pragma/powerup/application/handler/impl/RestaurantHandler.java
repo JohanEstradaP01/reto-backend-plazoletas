@@ -8,10 +8,10 @@ import com.pragma.powerup.application.mapper.IRestaurantResponseMapper;
 import com.pragma.powerup.domain.api.IRestaurantServicePort;
 import com.pragma.powerup.domain.exception.RestaurantAlreadyExist;
 import com.pragma.powerup.domain.model.Restaurant;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 

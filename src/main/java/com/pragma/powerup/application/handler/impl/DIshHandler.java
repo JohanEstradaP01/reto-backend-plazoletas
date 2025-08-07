@@ -21,14 +21,14 @@ public class DIshHandler implements IDishHandler {
     private final ICategoryUseCase categoryUseCase;
 
     @Override
-    public void createDish(DishRequestDto dishRequestDto) {
+    public void createDish(DishRequestDto dishRequestDto, String identification) {
         Dish mappedDish = dishRequestMapper.toDish(dishRequestDto);
         Long categoryId = dishRequestDto.getCategoryId();
         Category category = categoryUseCase.getCategory(categoryId);
 
         mappedDish.setCategory(category);
 
-        dishUseCase.createDish(mappedDish);
+        dishUseCase.createDish(mappedDish, identification);
     }
 
     @Override
