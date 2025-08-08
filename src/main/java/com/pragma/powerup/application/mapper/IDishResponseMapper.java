@@ -1,7 +1,8 @@
 package com.pragma.powerup.application.mapper;
 
-import com.pragma.powerup.application.dto.request.RestaurantRequestDto;
+import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.dto.response.RestaurantResponseDto;
+import com.pragma.powerup.domain.model.Dish;
 import com.pragma.powerup.domain.model.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -11,8 +12,8 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface IRestaurantResponseMapper {
+public interface IDishResponseMapper {
 
-    RestaurantResponseDto toRestaurantResponseDto(Restaurant restaurant);
+    DishResponseDto toDishResponse(Dish dish);
 
 }

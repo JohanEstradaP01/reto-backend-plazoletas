@@ -5,6 +5,8 @@ import com.pragma.powerup.domain.model.Dish;
 import com.pragma.powerup.domain.spi.IDishPersistencePort;
 import com.pragma.powerup.domain.spi.IRestaurantValidationPort;
 
+import java.util.List;
+
 public class DishUseCase implements IDishUseCase {
 
     private final IDishPersistencePort dishPersistencePort;
@@ -34,7 +36,13 @@ public class DishUseCase implements IDishUseCase {
     }
 
     @Override
-    public void updateDish(Dish dish) {
+    public void updateDish(Dish dish, String identification) {
+
+        Long restaurantId = dishPersistencePort.getDish(dish.getId()).getRestaurantId();
+        if (!restaurantValidationPort.isOwner(identification, restaurantId)) {
+            throw new RuntimeException();
+        }
+
         Dish dishToUpdate = dishPersistencePort.getDish(dish.getId());
         dishToUpdate.setPrice(dish.getPrice());
         dishToUpdate.setDescription(dish.getDescription());
@@ -42,10 +50,26 @@ public class DishUseCase implements IDishUseCase {
     }
 
     @Override
-    public void changeAvailability(Long id, boolean availability) {
+    public void changeAvailability(Long id, boolean availability, String identification) {
         Dish dish = dishPersistencePort.getDish(id);
         dish.setActive(availability);
+
+        Long restaurantId = dishPersistencePort.getDish(dish.getId()).getRestaurantId();
+        if (!restaurantValidationPort.isOwner(identification, restaurantId)) {
+            throw new RuntimeException();
+        }
+        
         dishPersistencePort.saveDish(dish);
+    }
+
+    @Override
+    public List<Dish> getDishesByRestaurant(Long restaurantId, Integer pageSize, Integer offSet) {
+        return dishPersistencePort.getDishesByRestaurant(restaurantId, pageSize, offSet);
+    }
+
+    @Override
+    public List<Dish> getDishesByRestaurant(Long restaurantId, Integer pageSize, Integer offSet, Long category) {
+        return dishPersistencePort.getDishesByRestaurant(restaurantId, category,  pageSize, offSet);
     }
 
 }

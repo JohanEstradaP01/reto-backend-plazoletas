@@ -47,7 +47,6 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
     @Override
     public boolean isOwner(String identification, Long restaurantId) {
         Optional<RestaurantEntity> restaurant = restaurantRepository.findById(restaurantId);
-        System.out.println(identification + " " + restaurant.get().getOwnerId());
         return restaurant.filter(restaurantEntity -> Objects.equals(String.valueOf(restaurantEntity.getOwnerId()), identification)).isPresent();
     }
 
