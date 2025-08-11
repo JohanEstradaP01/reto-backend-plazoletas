@@ -6,4 +6,6 @@ public interface IClientUserPort {
 
     public User getUser(Long id);
 
+    public User getUserByEmail();
+
 }

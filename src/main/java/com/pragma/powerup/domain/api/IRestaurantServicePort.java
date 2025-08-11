@@ -11,4 +11,6 @@ public interface IRestaurantServicePort {
 
     public List<Restaurant> getAllRestaurants();
 
+    public Restaurant getRestaurant(Long id);
+
 }

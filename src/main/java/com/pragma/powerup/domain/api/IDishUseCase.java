@@ -16,4 +16,6 @@ public interface IDishUseCase {
 
     public List<Dish> getDishesByRestaurant(Long restaurantId, Integer pageSize, Integer offSet, Long category);
 
+    public Dish getDish(Long id);
+
 }

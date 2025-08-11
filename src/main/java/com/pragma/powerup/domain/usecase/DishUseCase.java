@@ -72,4 +72,9 @@ public class DishUseCase implements IDishUseCase {
         return dishPersistencePort.getDishesByRestaurant(restaurantId, category,  pageSize, offSet);
     }
 
+    @Override
+    public Dish getDish(Long id) {
+        return dishPersistencePort.getDish(id);
+    }
+
 }

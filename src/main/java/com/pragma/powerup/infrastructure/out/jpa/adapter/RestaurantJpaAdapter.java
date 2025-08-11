@@ -39,6 +39,15 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
     }
 
     @Override
+    public Restaurant getRestaurant(Long id) {
+        Optional<RestaurantEntity> entity = restaurantRepository.findById(id);
+        if (entity.isEmpty()) {
+            throw new RuntimeException();
+        }
+        return restaurantEntityMapper.toRestaurant(entity.get());
+    }
+
+    @Override
     public boolean existRestaurantById(Long id) {
         Optional<RestaurantEntity> entity = restaurantRepository.findById(id);
         return entity.isPresent();

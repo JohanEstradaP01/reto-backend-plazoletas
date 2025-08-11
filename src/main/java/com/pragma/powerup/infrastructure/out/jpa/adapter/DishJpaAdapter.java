@@ -1,20 +1,20 @@
 package com.pragma.powerup.infrastructure.out.jpa.adapter;
 
 import com.pragma.powerup.domain.model.Dish;
+import com.pragma.powerup.domain.spi.IDishRestaurantConsultPort;
 import com.pragma.powerup.domain.spi.IDishPersistencePort;
 import com.pragma.powerup.infrastructure.out.jpa.entity.DishEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IDishEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IDishRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
-public class DishJpaAdapter implements IDishPersistencePort {
+public class DishJpaAdapter implements IDishPersistencePort, IDishRestaurantConsultPort {
 
     private final IDishEntityMapper entityMapper;
     private final IDishRepository dishRepository;

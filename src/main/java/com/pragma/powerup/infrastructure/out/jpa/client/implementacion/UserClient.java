@@ -19,4 +19,10 @@ public class UserClient implements IClientUserPort {
         return userResponseMapper.toUser(user);
     }
 
+    @Override
+    public User getUserByEmail() {
+        return userResponseMapper.toUser(feignClient.getUser());
+    }
+
+
 }

@@ -11,6 +11,8 @@ import java.time.LocalDate;
 @Setter
 public class UserResponseDto {
 
+    private Long id;
+
     @NotBlank
     private String name;
 

@@ -6,16 +6,15 @@ spring:
     url: jdbc:mysql://localhost:3307/plazoletas
     username: root
     password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 application:
   security:
     jwt:
       secret-key: p6b6aWZ9rpGkq1eb7ZQ+1qZW16ZHmBZRGdwO3rfF7Z0=
 
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
 appDescription: "Pragma Powerup"
 appVersion: "1.0.0"

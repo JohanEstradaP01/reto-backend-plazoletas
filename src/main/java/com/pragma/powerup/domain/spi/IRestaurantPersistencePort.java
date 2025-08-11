@@ -12,4 +12,6 @@ public interface IRestaurantPersistencePort {
 
     public List<Restaurant> getAllRestaurant();
 
+    public Restaurant getRestaurant(Long id);
+
 }

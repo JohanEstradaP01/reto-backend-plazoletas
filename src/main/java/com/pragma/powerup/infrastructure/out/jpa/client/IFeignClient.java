@@ -11,4 +11,7 @@ public interface IFeignClient {
     @GetMapping("/{id}")
     public UserResponseDto consultUser(@PathVariable("id") Long id);
 
+    @GetMapping
+    public UserResponseDto getUser();
+
 }
