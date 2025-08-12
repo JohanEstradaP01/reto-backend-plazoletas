@@ -31,13 +31,18 @@ public class RestaurantHandler implements IRestaurantHandler {
     }
 
     @Override
-    public List<RestaurantResponseDto> getAllRestaurants() {
-        List<Restaurant> restaurants = restaurantServicePort.getAllRestaurants();
+    public List<RestaurantResponseDto> getAllRestaurants(Integer pageSize, Integer offset) {
+        List<Restaurant> restaurants = restaurantServicePort.getAllRestaurants(pageSize, offset);
         ArrayList<RestaurantResponseDto> response = new ArrayList<>();
         for (Restaurant restaurant : restaurants){
             response.add(restaurantResponseMapper.toRestaurantResponseDto(restaurant));
         }
         return response;
+    }
+
+    @Override
+    public Long getRestaurantOwner(Long restaurantId) {
+        return restaurantServicePort.getRestaurantOwner(restaurantId);
     }
 
 }

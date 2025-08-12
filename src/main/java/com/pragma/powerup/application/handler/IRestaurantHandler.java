@@ -10,6 +10,8 @@ public interface IRestaurantHandler {
 
     public void createRestaurant(RestaurantRequestDto restaurantRequestDto) throws RestaurantAlreadyExist;
 
-    public List<RestaurantResponseDto> getAllRestaurants();
+    public List<RestaurantResponseDto> getAllRestaurants(Integer pageSize, Integer offset);
+
+    public Long getRestaurantOwner(Long restaurantId);
 
 }

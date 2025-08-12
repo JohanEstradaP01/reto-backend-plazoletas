@@ -13,6 +13,15 @@ public class User {
     private String email;
     private String password;
     private Role role;
+    private Long restaurantId;
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
+    }
 
     public void setId(Long id) {
         this.id = id;

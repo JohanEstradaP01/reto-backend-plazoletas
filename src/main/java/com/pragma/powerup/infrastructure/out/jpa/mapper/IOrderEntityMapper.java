@@ -23,4 +23,9 @@ public interface IOrderEntityMapper {
     @Mapping(target = "dishes", ignore = true)
     public OrderEntity toOrderEntity(Order order);
 
+    @Mapping(target = "customer", ignore = true)
+    @Mapping(target = "restaurant", ignore = true)
+    @Mapping(target = "dishes", ignore = true)
+    public Order toOrder(OrderEntity orderEntity);
+
 }

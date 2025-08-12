@@ -39,13 +39,19 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
-        return new ArrayList<>(restaurantPersistencePort.getAllRestaurant());
+    public List<Restaurant> getAllRestaurants(Integer pageSize, Integer offset) {
+        return new ArrayList<>(restaurantPersistencePort.getAllRestaurant(pageSize, offset));
     }
 
     @Override
     public Restaurant getRestaurant(Long id) {
         return restaurantPersistencePort.getRestaurant(id);
+    }
+
+    @Override
+    public Long getRestaurantOwner(Long restaurantId) {
+        Restaurant restaurant = restaurantPersistencePort.getRestaurant(restaurantId);
+        return restaurant.getOwnerId();
     }
 
 

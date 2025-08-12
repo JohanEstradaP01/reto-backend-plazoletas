@@ -21,7 +21,11 @@ public class UserClient implements IClientUserPort {
 
     @Override
     public User getUserByEmail() {
-        return userResponseMapper.toUser(feignClient.getUser());
+        User user;
+        UserResponseDto userResponseDto = feignClient.getUser();
+        user = userResponseMapper.toUser(userResponseDto);
+        user.setRestaurantId(userResponseDto.getRestaurantId());
+        return user;
     }
 
 

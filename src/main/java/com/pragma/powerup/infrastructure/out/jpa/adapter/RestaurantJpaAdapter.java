@@ -7,6 +7,9 @@ import com.pragma.powerup.infrastructure.out.jpa.entity.RestaurantEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.*;
 
@@ -29,8 +32,9 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
     }
 
     @Override
-    public List<Restaurant> getAllRestaurant() {
-        List<RestaurantEntity> entities = restaurantRepository.findAll();
+    public List<Restaurant> getAllRestaurant(Integer pageSize, Integer offset) {
+        PageRequest pageRequest = PageRequest.of(offset, pageSize, Sort.by("name").ascending());
+        Page<RestaurantEntity> entities = restaurantRepository.findAll(pageRequest);
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for (RestaurantEntity restaurant : entities){
             restaurants.add(restaurantEntityMapper.toRestaurant(restaurant));

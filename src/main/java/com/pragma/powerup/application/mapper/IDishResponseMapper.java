@@ -5,6 +5,7 @@ import com.pragma.powerup.application.dto.response.RestaurantResponseDto;
 import com.pragma.powerup.domain.model.Dish;
 import com.pragma.powerup.domain.model.Restaurant;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -14,6 +15,7 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface IDishResponseMapper {
 
+    @Mapping(target = "category", ignore = true)
     DishResponseDto toDishResponse(Dish dish);
 
 }

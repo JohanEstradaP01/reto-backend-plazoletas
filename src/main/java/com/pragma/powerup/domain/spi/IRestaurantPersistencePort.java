@@ -10,7 +10,7 @@ public interface IRestaurantPersistencePort {
 
     public Restaurant findRestaurantByNit(String nit);
 
-    public List<Restaurant> getAllRestaurant();
+    public List<Restaurant> getAllRestaurant(Integer pageSize, Integer offset);
 
     public Restaurant getRestaurant(Long id);
 

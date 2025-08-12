@@ -1,7 +1,10 @@
 package com.pragma.powerup.infrastructure.out.jpa.adapter;
 
+import com.pragma.powerup.domain.api.IUserServicePort;
 import com.pragma.powerup.domain.model.Order;
 import com.pragma.powerup.domain.model.OrderDish;
+import com.pragma.powerup.domain.model.State;
+import com.pragma.powerup.domain.model.User;
 import com.pragma.powerup.domain.spi.IOrderPersistencePort;
 import com.pragma.powerup.infrastructure.out.jpa.entity.*;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IDishEntityMapper;
@@ -14,6 +17,8 @@ import com.pragma.powerup.infrastructure.out.jpa.repository.IOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort{
     private final IDishEntityMapper dishEntityMapper;
     private final IOrderDishRepository orderDishRepository;
     private final IDishRepository dishRepository;
+    private final IUserServicePort userServicePort;
 
     @Override
     @Transactional
@@ -55,6 +61,40 @@ public class OrderJpaAdapter implements IOrderPersistencePort{
             savedOrderEntity.setDishes(orderDishEntityList);
 
         }
+    }
+
+    @Override
+    public List<Order> getPendingOrdersByCustomer(Long customerId) {
+        List<OrderEntity> orders = orderRepository.findByCustomerIdAndState(customerId, State.PENDING);
+        List<Order> ordersModel = new ArrayList<>();
+        for (OrderEntity order : orders) {
+            ordersModel.add(orderEntityMapper.toOrder(order));
+        }
+        return ordersModel;
+    }
+
+    @Override
+    public List<Order> getOrdersByRestaurantAndState(Integer pageSize, Integer offset, String state, Long restaurantId) {
+        PageRequest pageRequest = PageRequest.of(offset, pageSize);
+        List<Order> orders = new ArrayList<>();
+        List<OrderEntity> orderEntities = orderRepository.findByRestaurantIdAndState(restaurantId, State.valueOf(state), pageRequest);
+        for (OrderEntity order : orderEntities) {
+            Order orderModel = orderEntityMapper.toOrder(order);
+            User customer = userServicePort.getUserById(order.getCustomerId());
+            List<OrderDishEntity> orderDishEntityList = order.getDishes();
+            List<OrderDish> orderDishes = new ArrayList<>();
+
+            for (OrderDishEntity orderDish : orderDishEntityList) {
+                OrderDish orderDishModel = orderDishEntityMapper.toOrder(orderDish);
+                orderDishModel.setDish(dishEntityMapper.toDish(orderDish.getDish()));
+                orderDishes.add(orderDishModel);
+            }
+
+            orderModel.setDishes(orderDishes);
+            orderModel.setCustomer(customer);
+            orders.add(orderModel);
+        }
+        return orders;
     }
 
 }

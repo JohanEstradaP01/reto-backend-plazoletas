@@ -98,7 +98,7 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderPersistencePort orderPersistencePort(){
-        return new OrderJpaAdapter(orderEntityMapper, restaurantEntityMapper, orderDishEntityMapper, orderRepository, entityMapper, orderDishRepository, dishRepository);
+        return new OrderJpaAdapter(orderEntityMapper, restaurantEntityMapper, orderDishEntityMapper, orderRepository, entityMapper, orderDishRepository, dishRepository, userServicePort());
     }
 
 }

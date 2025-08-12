@@ -28,8 +28,23 @@ public class RestaurantRestController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<RestaurantResponseDto>> getAllRestaurants(){
-        return ResponseEntity.ok(restaurantHandler.getAllRestaurants());
+    public ResponseEntity<List<RestaurantResponseDto>> getAllRestaurants(
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "offset", required = false) Integer offset
+    ){
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (offset == null) {
+            offset = 0;
+        }
+        return ResponseEntity.ok(restaurantHandler.getAllRestaurants(pageSize, offset));
+    }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/owner/{restaurantId}")
+    public ResponseEntity<Long> getRestaurantOwner(@PathVariable Long restaurantId) {
+        return ResponseEntity.ok(restaurantHandler.getRestaurantOwner(restaurantId));
     }
 
 }

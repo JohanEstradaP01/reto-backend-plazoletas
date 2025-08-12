@@ -61,7 +61,9 @@ public class DIshHandler implements IDishHandler {
         }
         List<DishResponseDto> dishResponse = new ArrayList<>();
         for (Dish dish : dishes) {
-            dishResponse.add(dishResponseMapper.toDishResponse(dish));
+            DishResponseDto dishResponseDto = dishResponseMapper.toDishResponse(dish);
+            dishResponseDto.setCategory(dish.getCategory().getId());
+            dishResponse.add(dishResponseDto);
         }
         return dishResponse;
     }

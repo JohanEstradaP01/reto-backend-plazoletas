@@ -2,6 +2,7 @@ package com.pragma.powerup.application.dto.request;
 
 import com.pragma.powerup.domain.model.Category;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,17 +18,17 @@ public class DishRequestDto {
     @NotBlank
     private String name;
 
-    @NotEmpty
+    @NotNull
     private Long categoryId;
 
     @NotEmpty
     @NotBlank
     private String description;
 
-    @NotEmpty
+    @NotNull
     private float price;
 
-    @NotEmpty
+    @NotNull
     private Long restaurantId;
 
     @NotEmpty

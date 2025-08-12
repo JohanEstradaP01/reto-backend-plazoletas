@@ -9,8 +9,10 @@ public interface IRestaurantServicePort {
 
     public void createRestaurant(Restaurant restaurant) throws RestaurantAlreadyExist;
 
-    public List<Restaurant> getAllRestaurants();
+    public List<Restaurant> getAllRestaurants(Integer pageSize, Integer offset);
 
     public Restaurant getRestaurant(Long id);
+
+    public Long getRestaurantOwner(Long restaurantId);
 
 }

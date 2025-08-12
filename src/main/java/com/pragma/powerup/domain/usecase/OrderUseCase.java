@@ -8,7 +8,6 @@ import com.pragma.powerup.domain.model.OrderDish;
 import com.pragma.powerup.domain.spi.IDishRestaurantConsultPort;
 import com.pragma.powerup.domain.spi.IOrderPersistencePort;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,15 @@ public class OrderUseCase implements IOrderServicePort {
                 throw new RestaurantDoesNotContainDishException();
             }
         }
+        if (!orderPersistencePort.getPendingOrdersByCustomer(order.getCustomer().getId()).isEmpty()) {
+            throw new RuntimeException();
+        }
         orderPersistencePort.createOrder(order);
+    }
+
+    @Override
+    public List<Order> getOrdersByState(Integer pageSize, Integer offset, String state, Long restaurantId) {
+        return orderPersistencePort.getOrdersByRestaurantAndState(pageSize, offset, state, restaurantId);
     }
 
 }

@@ -26,6 +26,7 @@ public class DishUseCase implements IDishUseCase {
         if(!restaurantValidationPort.existRestaurantById(dish.getRestaurantId())){
             throw new RuntimeException();
         }
+
         System.out.println(identification+ " "+ dish.getRestaurantId());
         if (!restaurantValidationPort.isOwner(identification, dish.getRestaurantId())) {
             throw new RuntimeException();

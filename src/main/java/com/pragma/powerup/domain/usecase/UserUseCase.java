@@ -17,4 +17,9 @@ public class UserUseCase implements IUserServicePort {
         return clientUserPort.getUserByEmail();
     }
 
+    @Override
+    public User getUserById(Long id) {
+        return clientUserPort.getUser(id);
+    }
+
 }
