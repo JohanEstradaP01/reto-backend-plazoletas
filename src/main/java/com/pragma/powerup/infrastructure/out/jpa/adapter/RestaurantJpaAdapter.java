@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.out.jpa.adapter;
 
+import com.pragma.powerup.domain.exception.RestaurantNotExistException;
 import com.pragma.powerup.domain.model.Restaurant;
 import com.pragma.powerup.domain.spi.IRestaurantPersistencePort;
 import com.pragma.powerup.domain.spi.IRestaurantValidationPort;
@@ -46,7 +47,7 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
     public Restaurant getRestaurant(Long id) {
         Optional<RestaurantEntity> entity = restaurantRepository.findById(id);
         if (entity.isEmpty()) {
-            throw new RuntimeException();
+            throw new RestaurantNotExistException();
         }
         return restaurantEntityMapper.toRestaurant(entity.get());
     }
@@ -57,10 +58,5 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort, IRestau
         return entity.isPresent();
     }
 
-    @Override
-    public boolean isOwner(String identification, Long restaurantId) {
-        Optional<RestaurantEntity> restaurant = restaurantRepository.findById(restaurantId);
-        return restaurant.filter(restaurantEntity -> Objects.equals(String.valueOf(restaurantEntity.getOwnerId()), identification)).isPresent();
-    }
 
 }

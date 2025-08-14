@@ -1,11 +1,16 @@
 package com.pragma.powerup.domain.usecase;
 
 import com.pragma.powerup.domain.api.IDishUseCase;
+import com.pragma.powerup.domain.exception.PriceIsNegativeException;
+import com.pragma.powerup.domain.exception.RestaurantNotExistException;
+import com.pragma.powerup.domain.exception.UserNotIsOwnerException;
 import com.pragma.powerup.domain.model.Dish;
+import com.pragma.powerup.domain.model.Restaurant;
 import com.pragma.powerup.domain.spi.IDishPersistencePort;
 import com.pragma.powerup.domain.spi.IRestaurantValidationPort;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DishUseCase implements IDishUseCase {
 
@@ -20,16 +25,15 @@ public class DishUseCase implements IDishUseCase {
     @Override
     public void createDish(Dish dish, String identification) {
         if(dish.getPrice() <= 0){
-            throw new RuntimeException();
+            throw new PriceIsNegativeException();
         }
 
         if(!restaurantValidationPort.existRestaurantById(dish.getRestaurantId())){
-            throw new RuntimeException();
+            throw new RestaurantNotExistException();
         }
 
-        System.out.println(identification+ " "+ dish.getRestaurantId());
-        if (!restaurantValidationPort.isOwner(identification, dish.getRestaurantId())) {
-            throw new RuntimeException();
+        if (!isOwner(Long.getLong(identification), dish.getRestaurantId())) {
+            throw new UserNotIsOwnerException();
         }
 
         dish.setActive(true);
@@ -40,8 +44,8 @@ public class DishUseCase implements IDishUseCase {
     public void updateDish(Dish dish, String identification) {
 
         Long restaurantId = dishPersistencePort.getDish(dish.getId()).getRestaurantId();
-        if (!restaurantValidationPort.isOwner(identification, restaurantId)) {
-            throw new RuntimeException();
+        if (!isOwner(Long.getLong(identification), restaurantId)) {
+            throw new UserNotIsOwnerException();
         }
 
         Dish dishToUpdate = dishPersistencePort.getDish(dish.getId());
@@ -56,8 +60,8 @@ public class DishUseCase implements IDishUseCase {
         dish.setActive(availability);
 
         Long restaurantId = dishPersistencePort.getDish(dish.getId()).getRestaurantId();
-        if (!restaurantValidationPort.isOwner(identification, restaurantId)) {
-            throw new RuntimeException();
+        if (!isOwner(Long.getLong(identification), restaurantId)) {
+            throw new UserNotIsOwnerException();
         }
         
         dishPersistencePort.saveDish(dish);
@@ -76,6 +80,11 @@ public class DishUseCase implements IDishUseCase {
     @Override
     public Dish getDish(Long id) {
         return dishPersistencePort.getDish(id);
+    }
+
+    private boolean isOwner(Long restaurantId, Long ownerIdentification){
+        Restaurant restaurant = restaurantValidationPort.getRestaurant(restaurantId);
+        return Objects.equals(restaurant.getOwnerId(), ownerIdentification);
     }
 
 }

@@ -6,6 +6,7 @@ import com.pragma.powerup.domain.model.OrderDish;
 import com.pragma.powerup.domain.model.State;
 import com.pragma.powerup.domain.model.User;
 import com.pragma.powerup.domain.spi.IOrderPersistencePort;
+import com.pragma.powerup.infrastructure.exception.OrderNotExistException;
 import com.pragma.powerup.infrastructure.out.jpa.entity.*;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IDishEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IOrderDishEntityMapper;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -36,32 +38,55 @@ public class OrderJpaAdapter implements IOrderPersistencePort{
     private final IDishRepository dishRepository;
     private final IUserServicePort userServicePort;
 
+    private Order mapOrderEntityToOrder(OrderEntity orderEntity) {
+        Order order = orderEntityMapper.toOrder(orderEntity);
+        order.setCustomer(userServicePort.getUserById(orderEntity.getCustomerId()));
+        List<OrderDish> orderDishes = orderEntity.getDishes().stream()
+                .map(orderDishEntity -> {
+                    OrderDish orderDish = orderDishEntityMapper.toOrder(orderDishEntity);
+                    orderDish.setDish(dishEntityMapper.toDish(orderDishEntity.getDish()));
+                    return orderDish;
+                })
+                .collect(Collectors.toList());
+        order.setRestaurant(restaurantEntityMapper.toRestaurant(orderEntity.getRestaurant()));
+        order.setDishes(orderDishes);
+        return order;
+    }
+
     @Override
     @Transactional
     public void createOrder(Order order) {
-        OrderEntity orderEntity = orderEntityMapper.toOrderEntity(order);
-        RestaurantEntity restaurantEntity = restaurantEntityMapper.toEntity(order.getRestaurant());
-        orderEntity.setRestaurant(restaurantEntity);
-        orderEntity.setCustomerId(order.getCustomer().getId());
-        OrderEntity savedOrderEntity = orderRepository.save(orderEntity);
-        List<OrderDishEntity> orderDishEntityList = new ArrayList<>();
-        for (OrderDish orderDish : order.getDishes()) {
-            DishEntity dishEntity = dishRepository.findById(orderDish.getDish().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Dish not found"));
-            OrderDishId orderDishId = new OrderDishId();
-            orderDishId.setOrderId(savedOrderEntity.getId());
-            orderDishId.setDishId(dishEntity.getId());
-            OrderDishEntity orderDishEntity = new OrderDishEntity();
-            orderDishEntity.setId(orderDishId);
-            orderDishEntity.setQuantity(orderDish.getQuantity());
-            orderDishEntity.setOrder(savedOrderEntity);
-            orderDishEntity.setDish(dishEntity);
-            OrderDishEntity savedOrderDish = orderDishRepository.save(orderDishEntity);
-            orderDishEntityList.add(savedOrderDish);
-            savedOrderEntity.setDishes(orderDishEntityList);
-
-        }
+        OrderEntity savedOrderEntity = saveOrder(order);
+        saveOrderDishes(order.getDishes(), savedOrderEntity);
     }
+
+    private OrderEntity saveOrder(Order order) {
+        OrderEntity orderEntity = orderEntityMapper.toOrderEntity(order);
+        orderEntity.setRestaurant(restaurantEntityMapper.toEntity(order.getRestaurant()));
+        orderEntity.setCustomerId(order.getCustomer().getId());
+        return orderRepository.save(orderEntity);
+    }
+
+    private List<OrderDishEntity> saveOrderDishes(List<OrderDish> dishes, OrderEntity savedOrderEntity) {
+        List<OrderDishEntity> orderDishEntityList = new ArrayList<>();
+        for (OrderDish orderDish : dishes) {
+            OrderDishEntity savedDish = createAndSaveOrderDish(orderDish, savedOrderEntity);
+            orderDishEntityList.add(savedDish);
+        }
+        return orderDishEntityList;
+    }
+
+    private OrderDishEntity createAndSaveOrderDish(OrderDish orderDish, OrderEntity savedOrderEntity) {
+        DishEntity dishEntity = dishRepository.findById(orderDish.getDish().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Dish not found"));
+        OrderDishEntity orderDishEntity = new OrderDishEntity();
+        orderDishEntity.setId(new OrderDishId(savedOrderEntity.getId(), dishEntity.getId()));
+        orderDishEntity.setQuantity(orderDish.getQuantity());
+        orderDishEntity.setOrder(savedOrderEntity);
+        orderDishEntity.setDish(dishEntity);
+        return orderDishRepository.save(orderDishEntity);
+    }
+
 
     @Override
     public List<Order> getPendingOrdersByCustomer(Long customerId) {
@@ -79,22 +104,20 @@ public class OrderJpaAdapter implements IOrderPersistencePort{
         List<Order> orders = new ArrayList<>();
         List<OrderEntity> orderEntities = orderRepository.findByRestaurantIdAndState(restaurantId, State.valueOf(state), pageRequest);
         for (OrderEntity order : orderEntities) {
-            Order orderModel = orderEntityMapper.toOrder(order);
-            User customer = userServicePort.getUserById(order.getCustomerId());
-            List<OrderDishEntity> orderDishEntityList = order.getDishes();
-            List<OrderDish> orderDishes = new ArrayList<>();
-
-            for (OrderDishEntity orderDish : orderDishEntityList) {
-                OrderDish orderDishModel = orderDishEntityMapper.toOrder(orderDish);
-                orderDishModel.setDish(dishEntityMapper.toDish(orderDish.getDish()));
-                orderDishes.add(orderDishModel);
-            }
-
-            orderModel.setDishes(orderDishes);
-            orderModel.setCustomer(customer);
+            Order orderModel = mapOrderEntityToOrder(order);
             orders.add(orderModel);
         }
         return orders;
     }
+
+    @Override
+    public Order getOrder(Long orderId) {
+        Optional<OrderEntity> orderOptional = orderRepository.findById(orderId);
+        if(orderOptional.isEmpty()){
+            throw new OrderNotExistException();
+        }
+        return mapOrderEntityToOrder(orderOptional.get());
+    }
+
 
 }

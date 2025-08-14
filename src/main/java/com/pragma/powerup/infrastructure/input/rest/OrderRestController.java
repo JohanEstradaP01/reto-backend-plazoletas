@@ -1,6 +1,8 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
+import com.pragma.powerup.application.dto.request.DeliverOrderRequestDto;
 import com.pragma.powerup.application.dto.request.OrderRequestDto;
+import com.pragma.powerup.application.dto.request.ReadyOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
 import com.pragma.powerup.application.service.JwtProvider;
@@ -34,14 +36,38 @@ public class OrderRestController {
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(value = "offset", required = false) Integer offset,
             @RequestParam(value = "state") String state,
-            HttpServletRequest httpServletRequest
+            @RequestHeader("Authorization") String authorization
     ) {
         if (offset == null) {offset = 0;}
         if (pageSize == null) {pageSize = 10;}
-        String token = httpServletRequest.getHeader("Authorization").substring(7);
+        String token = authorization.substring(7);
         String email = jwtProvider.getClaims(token).getSubject();
         System.out.println(email);
         return ResponseEntity.ok(orderHandler.getOrdersByState(pageSize, offset, state));
+    }
+
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PatchMapping("/assign")
+    public ResponseEntity<Void> assignOrder(@RequestHeader("Authorization") String authorization, @RequestBody ReadyOrderRequestDto order){
+        Long orderId = order.getOrderId();
+        String token = authorization.substring(7);
+        Long employeeId = ((Integer) jwtProvider.getClaims(token).get("id")).longValue();
+        System.out.println(employeeId);
+        orderHandler.assignOrder(orderId, employeeId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PatchMapping("/ready")
+    public ResponseEntity<Void> readyOrder(@RequestHeader("Authorization") String authorization, @RequestBody ReadyOrderRequestDto orderRequestDto) {
+        orderHandler.orderReady(orderRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PatchMapping("/deliver")
+    public ResponseEntity<Boolean> deliverOrder(@RequestBody DeliverOrderRequestDto deliverOrderRequestDto) {
+        return ResponseEntity.ok(orderHandler.deliverOrder(deliverOrderRequestDto));
     }
 
 }

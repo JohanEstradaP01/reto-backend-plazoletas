@@ -5,7 +5,7 @@ import com.pragma.powerup.domain.api.*;
 import com.pragma.powerup.domain.spi.*;
 import com.pragma.powerup.domain.usecase.*;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.*;
-import com.pragma.powerup.infrastructure.out.jpa.client.IFeignClient;
+import com.pragma.powerup.infrastructure.out.jpa.client.IFeignUserClient;
 import com.pragma.powerup.infrastructure.out.jpa.client.implementacion.UserClient;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.*;
 import com.pragma.powerup.infrastructure.out.jpa.repository.*;
@@ -21,7 +21,7 @@ public class BeanConfiguration {
     private final IRestaurantRepository restaurantRepository;
     private final IRestaurantEntityMapper restaurantEntityMapper;
     private final IUserResponseMapper userResponseMapper;
-    private final IFeignClient feignClient;
+    private final IFeignUserClient feignClient;
     private final IDishEntityMapper entityMapper;
     private final IDishRepository dishRepository;
     private final ICategoryEntityMapper categoryEntityMapper;
@@ -30,6 +30,7 @@ public class BeanConfiguration {
     private final IOrderEntityMapper orderEntityMapper;
     private final IOrderDishEntityMapper orderDishEntityMapper;
     private final IOrderDishRepository orderDishRepository;
+    private final INotificationPort notificationPort;
 
     @Bean
     public IObjectPersistencePort objectPersistencePort() {
@@ -93,7 +94,7 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderPersistencePort(), dishRestaurantConsultPort());
+        return new OrderUseCase(orderPersistencePort(), dishRestaurantConsultPort(), notificationPort);
     }
 
     @Bean

@@ -2,6 +2,6 @@ package com.pragma.powerup.domain.exception;
 
 public class RestaurantDoesNotContainDishException extends RuntimeException {
     public RestaurantDoesNotContainDishException() {
-        super();
+        super("El plato no existe en el restaurante");
     }
 }

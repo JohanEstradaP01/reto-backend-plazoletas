@@ -3,6 +3,7 @@ package com.pragma.powerup.infrastructure.out.jpa.adapter;
 import com.pragma.powerup.domain.model.Dish;
 import com.pragma.powerup.domain.spi.IDishRestaurantConsultPort;
 import com.pragma.powerup.domain.spi.IDishPersistencePort;
+import com.pragma.powerup.infrastructure.exception.DishNotExistException;
 import com.pragma.powerup.infrastructure.out.jpa.entity.DishEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IDishEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IDishRepository;
@@ -28,7 +29,7 @@ public class DishJpaAdapter implements IDishPersistencePort, IDishRestaurantCons
     public Dish getDish(Long id) {
         Optional<DishEntity> entity = dishRepository.findById(id);
         if(entity.isEmpty()){
-            throw new RuntimeException();
+            throw new DishNotExistException();
         }
         return entityMapper.toDish(entity.get());
     }

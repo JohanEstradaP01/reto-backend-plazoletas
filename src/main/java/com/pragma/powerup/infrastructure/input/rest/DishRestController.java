@@ -26,24 +26,24 @@ public class DishRestController {
 
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping
-    public void createDish(@Valid @RequestBody DishRequestDto requestDto, HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization").substring(7);
+    public void createDish(@Valid @RequestBody DishRequestDto requestDto, @RequestHeader("Authorization") String authorization){
+        String bearerToken = authorization.substring(7);
         String identification = jwtProvider.getClaims(bearerToken).get("identification", String.class);
         dishHandler.createDish(requestDto, identification);
     }
 
     @PreAuthorize("hasRole('OWNER')")
-    @PutMapping
-    public void updateDish(@RequestBody DishRequestDto dishRequestDto, HttpServletRequest request){
-        String token = request.getHeader("Authorization").substring(7);
+    @PatchMapping
+    public void updateDish(@RequestBody DishRequestDto dishRequestDto, @RequestHeader("Authorization") String authorization){
+        String token = authorization.substring(7);
         String identification = jwtProvider.getClaims(token).get("identification", String.class);
         dishHandler.updateDish(dishRequestDto, identification);
     }
 
     @PreAuthorize("hasRole('OWNER')")
-    @PutMapping("/availability")
-    public void changeAvailability(@RequestBody DishAvailabilityDto dishAvailabilityDto, HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization").substring(7);
+    @PatchMapping("/availability")
+    public void changeAvailability(@RequestBody DishAvailabilityDto dishAvailabilityDto, @RequestHeader("Authorization") String authorization){
+        String bearerToken = authorization.substring(7);
         String identification = jwtProvider.getClaims(bearerToken).get("identification", String.class);
         dishHandler.changeAvailability(dishAvailabilityDto, identification);
     }

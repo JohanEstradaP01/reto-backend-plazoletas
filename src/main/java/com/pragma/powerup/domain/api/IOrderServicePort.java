@@ -10,4 +10,10 @@ public interface IOrderServicePort {
 
     public List<Order> getOrdersByState(Integer pageSize, Integer offset, String state, Long restaurantId);
 
+    public void assignOrder(Long orderId, Long employeeId);
+
+    public void orderReady(Long orderId);
+
+    public boolean deliverOrder(Long orderId, Integer code);
+
 }

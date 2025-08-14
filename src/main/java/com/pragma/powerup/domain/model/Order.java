@@ -10,8 +10,18 @@ public class Order {
     private LocalDate date;
     private State state;
     private Long chefId;
+
+    public Long getEmployeeAssigned() {
+        return employeeAssigned;
+    }
+
+    public void setEmployeeAssigned(Long employeeAssigned) {
+        this.employeeAssigned = employeeAssigned;
+    }
+
     private Restaurant restaurant;
     private List<OrderDish> dishes;
+    private Long employeeAssigned;
 
     public Long getId() {
         return id;

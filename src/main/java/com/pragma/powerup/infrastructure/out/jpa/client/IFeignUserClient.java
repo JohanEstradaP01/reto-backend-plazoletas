@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "userClient", url = "http://localhost:8081/api/v1/user")
-public interface IFeignClient {
+public interface IFeignUserClient {
 
     @GetMapping("/{id}")
     public UserResponseDto consultUser(@PathVariable("id") Long id);

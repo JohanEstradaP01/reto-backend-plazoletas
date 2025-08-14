@@ -35,4 +35,6 @@ public class OrderRequestDto {
     @NotEmpty
     private List<OrderDishRequestDto> orderDish;
 
+    private Long employeeAssigned;
+
 }

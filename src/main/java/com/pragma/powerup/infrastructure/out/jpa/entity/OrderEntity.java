@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,8 +35,10 @@ public class OrderEntity {
     @JoinColumn(name = "restaurantId")
     private RestaurantEntity restaurant;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderDishEntity> dishes;
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private List<OrderDishEntity> dishes = new ArrayList<>();
+
+    private Long employeeAssigned;
 
 
 }

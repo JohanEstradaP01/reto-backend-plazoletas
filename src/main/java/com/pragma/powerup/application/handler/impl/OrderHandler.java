@@ -1,8 +1,9 @@
 package com.pragma.powerup.application.handler.impl;
 
-import com.pragma.powerup.application.dto.request.DishRequestDto;
+import com.pragma.powerup.application.dto.request.DeliverOrderRequestDto;
 import com.pragma.powerup.application.dto.request.OrderDishRequestDto;
 import com.pragma.powerup.application.dto.request.OrderRequestDto;
+import com.pragma.powerup.application.dto.request.ReadyOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderDishResponseDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
@@ -13,7 +14,6 @@ import com.pragma.powerup.domain.api.IOrderServicePort;
 import com.pragma.powerup.domain.api.IRestaurantServicePort;
 import com.pragma.powerup.domain.api.IUserServicePort;
 import com.pragma.powerup.domain.model.*;
-import com.pragma.powerup.infrastructure.out.jpa.client.IFeignClient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -71,6 +71,21 @@ public class OrderHandler implements IOrderHandler {
         }
 
         return orderResponseList;
+    }
+
+    @Override
+    public void assignOrder(Long orderId, Long employeeId) {
+        orderServicePort.assignOrder(orderId, employeeId);
+    }
+
+    @Override
+    public void orderReady(ReadyOrderRequestDto orderRequestDto) {
+        orderServicePort.orderReady(orderRequestDto.getOrderId());
+    }
+
+    @Override
+    public boolean deliverOrder(DeliverOrderRequestDto deliverOrderRequestDto) {
+        return orderServicePort.deliverOrder(deliverOrderRequestDto.getOrderId(), deliverOrderRequestDto.getCode());
     }
 
     private static List<OrderDishResponseDto> getOrderDishResponseDtos(Order order) {

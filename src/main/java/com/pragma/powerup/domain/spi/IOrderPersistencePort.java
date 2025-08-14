@@ -12,4 +12,6 @@ public interface IOrderPersistencePort {
 
     public List <Order> getOrdersByRestaurantAndState(Integer pageSize, Integer offset, String state, Long restaurantId);
 
+    public Order getOrder(Long orderId);
+
 }

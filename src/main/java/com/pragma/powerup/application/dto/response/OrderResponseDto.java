@@ -34,4 +34,7 @@ public class OrderResponseDto {
     @NotEmpty
     private List<OrderDishResponseDto> orderDish;
 
+    @NotNull
+    private Long employeeAssigned;
+
 }
