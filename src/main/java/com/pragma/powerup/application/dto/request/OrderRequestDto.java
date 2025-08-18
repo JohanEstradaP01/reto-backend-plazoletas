@@ -23,7 +23,6 @@ public class OrderRequestDto {
     @NotNull
     private LocalDate date;
 
-    @NotNull
     private State state;
 
     @NotNull

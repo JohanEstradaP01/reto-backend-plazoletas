@@ -1,9 +1,6 @@
 package com.pragma.powerup.application.handler.impl;
 
-import com.pragma.powerup.application.dto.request.DeliverOrderRequestDto;
-import com.pragma.powerup.application.dto.request.OrderDishRequestDto;
-import com.pragma.powerup.application.dto.request.OrderRequestDto;
-import com.pragma.powerup.application.dto.request.ReadyOrderRequestDto;
+import com.pragma.powerup.application.dto.request.*;
 import com.pragma.powerup.application.dto.response.OrderDishResponseDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
@@ -86,6 +83,11 @@ public class OrderHandler implements IOrderHandler {
     @Override
     public boolean deliverOrder(DeliverOrderRequestDto deliverOrderRequestDto) {
         return orderServicePort.deliverOrder(deliverOrderRequestDto.getOrderId(), deliverOrderRequestDto.getCode());
+    }
+
+    @Override
+    public void cancelOrder(OrderCancelDto orderCancel, Long userId) {
+        orderServicePort.cancelOrder(orderCancel.getOrderId(), userId);
     }
 
     private static List<OrderDishResponseDto> getOrderDishResponseDtos(Order order) {

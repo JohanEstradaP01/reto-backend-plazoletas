@@ -1,6 +1,7 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
 import com.pragma.powerup.application.dto.request.DeliverOrderRequestDto;
+import com.pragma.powerup.application.dto.request.OrderCancelDto;
 import com.pragma.powerup.application.dto.request.OrderRequestDto;
 import com.pragma.powerup.application.dto.request.ReadyOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
@@ -68,6 +69,15 @@ public class OrderRestController {
     @PatchMapping("/deliver")
     public ResponseEntity<Boolean> deliverOrder(@RequestBody DeliverOrderRequestDto deliverOrderRequestDto) {
         return ResponseEntity.ok(orderHandler.deliverOrder(deliverOrderRequestDto));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/cancel")
+    public ResponseEntity<Void> cancelOrder(@RequestBody OrderCancelDto orderCancel, @RequestHeader("Authorization") String authorization) {
+        String token = authorization.substring(7);
+        Long id = (Long) jwtProvider.getClaims(token).get("id");
+        orderHandler.cancelOrder(orderCancel, id);
+        return ResponseEntity.ok().build();
     }
 
 }

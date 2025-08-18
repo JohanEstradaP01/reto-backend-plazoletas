@@ -1,6 +1,7 @@
 package com.pragma.powerup.application.handler;
 
 import com.pragma.powerup.application.dto.request.DeliverOrderRequestDto;
+import com.pragma.powerup.application.dto.request.OrderCancelDto;
 import com.pragma.powerup.application.dto.request.OrderRequestDto;
 import com.pragma.powerup.application.dto.request.ReadyOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
@@ -20,5 +21,7 @@ public interface IOrderHandler {
     public void orderReady(ReadyOrderRequestDto orderRequestDto);
 
     public boolean deliverOrder(DeliverOrderRequestDto deliverOrderRequestDto);
+
+    public void cancelOrder(OrderCancelDto orderCancel, Long userId);
 
 }

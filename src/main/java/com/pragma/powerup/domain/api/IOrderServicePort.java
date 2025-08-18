@@ -16,4 +16,6 @@ public interface IOrderServicePort {
 
     public boolean deliverOrder(Long orderId, Integer code);
 
+    public void cancelOrder(Long orderId, Long userId);
+
 }
